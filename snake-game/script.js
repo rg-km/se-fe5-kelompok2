@@ -86,6 +86,7 @@ function drawImg(ctx, x, y, src) {
     ctx.drawImage(img, x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE);
     ctx.beginPath();
     ctx.stroke();
+
 }
 
 function drawScore(snake) {
@@ -116,7 +117,7 @@ function draw() {
             drawCell(ctx, snake1.body[i].x, snake1.body[i].y, snake1.color);
         }
         drawCell(ctx, apple1.position.x, apple1.position.y, apple1.color);
-        
+      
         drawScore(snake1);
     }, REDRAW_INTERVAL);
 }
@@ -184,6 +185,7 @@ function move(snake) {
             moveUp(snake);
             break;
     }
+
     moveBody(snake);
     setTimeout(function() {
         move(snake);
