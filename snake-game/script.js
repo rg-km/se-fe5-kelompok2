@@ -131,6 +131,12 @@ function drawHead(ctx, x, y){
     ctx.drawImage(img, x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE);
 }
 
+//sound
+function sound(src){
+    var myMusic =  new Audio (src);
+    myMusic.play();
+}
+
 function drawScore(snake) {
     let scoreCanvas;
     if (snake.color == snake1.color) {
@@ -184,26 +190,31 @@ function draw() {
 
 function level(snake){
     if(snake.score == 5 && snake.level == 1){
-        alert("Level 1 Complate!");
+        sound("asset/levelUp.wav");
+        alert("Level 1 Complete!");
         snake.level = 2;
         MOVE_INTERVAL = 100;
     }
     else if(snake.score == 10 && snake.level == 2){
-        alert("Level 2 Complate!");
+        sound("asset/levelUp.wav");
+        alert("Level 2 Complete!");
         snake.level = 3;
         MOVE_INTERVAL = 80;
     }
     else if(snake.score == 15 && snake.level == 3){
-        alert("Level 3 Complate!");
+        sound("asset/levelUp.wav");
+        alert("Level 3 Complete!");
         snake.level = 4;
         MOVE_INTERVAL = 60;
     }
     else if(snake.score == 20 && snake.level == 4){
-        alert("Level 4 Complate!");
+        sound("asset/levelUp.wav");
+        alert("Level 4 Complete!");
         snake.level = 5;
         MOVE_INTERVAL = 40;
     }
     else if(snake.score == 25 && snake.level == 5){
+        sound("asset/levelUp.wav");
         alert("Game Over, Try Again?");
         snake.level = 1;
         snake.score = 0;
@@ -298,6 +309,7 @@ function turn(snake, direction) {
     if (direction !== oppositeDirections[snake.direction]) {
         snake.direction = direction;
     }
+
 }
 
 function move(snake) {
