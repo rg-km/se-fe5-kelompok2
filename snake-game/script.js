@@ -37,14 +37,18 @@ function initDirection() {
     return Math.floor(Math.random() * 4);
 }
 
-let snake1 = {
-    color: "green",
-    ...initHeadAndBody(),
-    position: initPosition(),
-    direction: initDirection(),
-    score: 0,
-    level: 1,
+function initSnake(color) {
+    return{
+        color: color,
+        ...initHeadAndBody(),
+        position: initPosition(),
+        direction: initDirection(),
+        score: 0,
+        level: 1,
+    }
 }
+
+let snake1 = initSnake("green");
 
 let apple1 = {
     position: initPosition(),
@@ -276,6 +280,38 @@ function moveUp(snake) {
     level(snake);
 }
 
+function checkCollision(snake) {
+    let isCollide = false;
+    //this
+    for (let i = 0; i < snake.length; i++) {
+        for (let j = 0; j < snake.length; j++) {
+            for (let k = 1; k < snake[j].body.length; k++) {
+                if (snake[i].head.x == snake[j].body[k].x && snake[i].head.y == snake[j].body[k].y) {
+                    isCollide = true;
+                }
+            }
+        }
+    }
+    if (isCollide) {
+        snake1 = initSnake("green");
+    }
+    return isCollide;
+}
+
+function turn(snake, direction) {
+    const oppositeDirections = {
+        [DIRECTION.LEFT]: DIRECTION.RIGHT,
+        [DIRECTION.RIGHT]: DIRECTION.LEFT,
+        [DIRECTION.DOWN]: DIRECTION.UP,
+        [DIRECTION.UP]: DIRECTION.DOWN,
+    }
+
+    if (direction !== oppositeDirections[snake.direction]) {
+        snake.direction = direction;
+    }
+
+}
+
 function move(snake) {
     switch (snake.direction) {
         case DIRECTION.LEFT:
@@ -293,9 +329,13 @@ function move(snake) {
     }
 
     moveBody(snake);
-    setTimeout(function() {
-        move(snake);
-    }, MOVE_INTERVAL);
+    if (!checkCollision([snake1])) {
+        setTimeout(function() {
+            move(snake);
+        }, MOVE_INTERVAL);
+    } else {
+        initGame();
+    }
 }
 
 function moveBody(snake) {
@@ -305,14 +345,18 @@ function moveBody(snake) {
 
 document.addEventListener("keydown", function (event) {
     if (event.key === "ArrowLeft") {
-        snake1.direction = DIRECTION.LEFT;
+        turn(snake1, DIRECTION.LEFT);
     } else if (event.key === "ArrowRight") {
-        snake1.direction = DIRECTION.RIGHT;
+        turn(snake1, DIRECTION.RIGHT);
     } else if (event.key === "ArrowUp") {
-        snake1.direction = DIRECTION.UP;
+        turn(snake1, DIRECTION.UP);
     } else if (event.key === "ArrowDown") {
-        snake1.direction = DIRECTION.DOWN;
+        turn(snake1, DIRECTION.DOWN);
     }
 })
 
-move(snake1);
+function initGame() {
+    move(snake1);
+}
+
+initGame();
