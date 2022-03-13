@@ -155,8 +155,8 @@ function draw() {
             drawImg(ctx, snake1.body[i].x, snake1.body[i].y, "asset/tail.png");
         }
         
-        drawImg(ctx, apple1.position.x, apple1.position.y, "apple");
-        drawImg(ctx, apple2.position.x, apple2.position.y, "apple");
+        drawImg(ctx, apple1.position.x, apple1.position.y, "asset/apple.png");
+        drawImg(ctx, apple2.position.x, apple2.position.y, "asset/apple.png");
         drawScore(snake1);
 
         drawLevel(snake1);
