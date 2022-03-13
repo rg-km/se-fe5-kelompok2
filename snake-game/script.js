@@ -53,31 +53,6 @@ function drawCell(ctx, x, y, color) {
     ctx.arc(x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE/2, 0, 360);
     ctx.fill();
 }
-function drawHead(ctx, x, y) {
-    ctx.fillStyle = "#0b6623";
-    ctx.beginPath();
-    ctx.arc(x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE/2, 0, 360);
-    ctx.closePath();
-    ctx.fill();
-
-    // ctx.fillStyle = "#FFFFFF"; //white
-    ctx.fillStyle = "#000000";
-    ctx.beginPath();
-    
-    if (snake1.direction == DIRECTION.RIGHT){
-        var eye = [3, 3, 4, -4];
-    } else if (snake1.direction == DIRECTION.LEFT){
-        var eye = [-3, -3, 4, -4];
-    } else if (snake1.direction == DIRECTION.UP){
-        var eye = [-4, 4, -3, -3];
-    } else if (snake1.direction == DIRECTION.DOWN){
-        var eye = [-4, 4, 3, 3];
-    }
-    ctx.arc(x * CELL_SIZE + eye[0], y * CELL_SIZE + eye[2], CELL_SIZE/8, 0, 360);
-    ctx.arc(x * CELL_SIZE + eye[1], y * CELL_SIZE + eye[3], CELL_SIZE/8, 0, 360);
-    ctx.closePath();
-    ctx.fill();
-}
 
 //draw image
 function drawImg(ctx, x, y, src) {
@@ -86,7 +61,21 @@ function drawImg(ctx, x, y, src) {
     ctx.drawImage(img, x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE);
     ctx.beginPath();
     ctx.stroke();
+}
 
+function drawHead(ctx, x, y){
+    var img = new Image();
+    if (snake1.direction == DIRECTION.RIGHT){
+        img.src = "asset/headRight.png";
+    } else if (snake1.direction == DIRECTION.LEFT){
+        img.src = "asset/headLeft.png";
+    } else if (snake1.direction == DIRECTION.UP){
+        img.src = "asset/headUp.png";
+    } else if (snake1.direction == DIRECTION.DOWN){
+        img.src = "asset/headDown.png";
+    }
+    
+    ctx.drawImage(img, x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE);
 }
 
 function drawScore(snake) {
@@ -110,11 +99,10 @@ function draw() {
         ctx.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
         
         //snake head 
-
         drawHead(ctx, snake1.head.x, snake1.head.y);
         //loop tail
         for (let i = 1; i < snake1.body.length; i++) {
-            drawCell(ctx, snake1.body[i].x, snake1.body[i].y, snake1.color);
+            drawImg(ctx, snake1.body[i].x, snake1.body[i].y, "asset/tail.png");
         }
         drawCell(ctx, apple1.position.x, apple1.position.y, apple1.color);
       
