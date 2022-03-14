@@ -212,6 +212,12 @@ function sound(src){
     myMusic.play();
 }
 
+//sound
+function sound(src){
+    var myMusic =  new Audio (src);
+    myMusic.play();
+}
+
 function drawScore(snake) {
     let scoreCanvas;
     if (snake.color == snake1.color) {
@@ -245,10 +251,8 @@ function draw() {
         drawScore(snake1);
 
         drawLevel(snake1);
-
         drawSpeed();
         drawWall(ctx, snake1.level);
-        
         drawLifes();
     }, REDRAW_INTERVAL);
 }
@@ -308,7 +312,7 @@ function eat(snake) {
         snake.score++;
         snake.body.push({x: snake.head.x, y: snake.head.y});
     }
-
+  
     if ( snake.head.x == apple2.position.x && snake.head.y == apple2.position.y) {
         apple2.position = initPosition();
         snake.score++;
