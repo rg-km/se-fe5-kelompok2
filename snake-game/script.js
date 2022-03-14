@@ -295,7 +295,6 @@ function checkCollision(snake) {
     if (isCollide) {
         snake1 = initSnake("green");
     }
-    
     return isCollide;
 }
 
