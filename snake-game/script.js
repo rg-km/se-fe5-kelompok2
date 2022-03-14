@@ -37,24 +37,28 @@ function initDirection() {
     return Math.floor(Math.random() * 4);
 }
 
-function initSnake(color) {
+function initSnake() {
     return{
-        color: color,
+        // color: color,
         ...initHeadAndBody(),
         position: initPosition(),
         direction: initDirection(),
         score: 0,
         level: 1,
+        lifes: 3,
     }
 }
 
-let snake1 = initSnake("green");
+let snake1 = initSnake();
 
 let apple1 = {
     position: initPosition(),
 }
 let apple2 = {
     position: initPosition(),
+}
+let bonusLifes = {
+    position:initPosition(),
 }
 
 function initWall(x, y, width, height, color){
@@ -131,6 +135,26 @@ function drawHead(ctx, x, y){
     ctx.drawImage(img, x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE);
 }
 
+function drawLifes(){
+    let lifeCanvas = document.getElementById("lifeBoard");
+    let ctxLife = lifeCanvas.getContext("2d");
+    
+    let snakeCanvas = document.getElementById("snakeBoard");
+    let ctxBoard = snakeCanvas.getContext("2d");
+
+    scoreBonus = [1, 3, 5, 7, 11, 13, 17, 19, 23];
+    for (let i = 0; i < scoreBonus.length; i++){
+        if (snake1.score == scoreBonus[i]){
+            drawImg(ctxBoard, bonusLifes.position.x, bonusLifes.position.y, "asset/heart.png");
+        }
+    }
+
+    for (let i = 0; i < snake1.lifes; i++){
+        drawImg(ctxLife, 0 + i*20 / CELL_SIZE, 0 / CELL_SIZE, "asset/heart.png");
+    }
+
+}
+
 //sound
 function sound(src){
     var myMusic =  new Audio (src);
@@ -170,6 +194,7 @@ function draw() {
         drawScore(snake1);
 
         drawLevel(snake1);
+
         if(snake1.level == 2){
             drawWall(ctx, wall1.x, wall1.y, wall1.width, wall1.height, wall1.color);
         }else if(snake1.level == 3){
@@ -185,6 +210,8 @@ function draw() {
         }
 
         drawSpeed();
+        drawLifes();
+        // drawAddLifes();
     }, REDRAW_INTERVAL);
 }
 
@@ -250,6 +277,13 @@ function eat(snake) {
         snake.score++;
         snake.body.push({x: snake.head.x, y: snake.head.y});
     }
+
+    if ( snake.head.x == bonusLifes.position.x && snake.head.y == bonusLifes.position.y) {
+        bonusLifes.position = initPosition();
+        snake.lifes++;
+        snake.score++;
+        snake.body.push({x: snake.head.x, y: snake.head.y});
+    }
 }
 
 function moveLeft(snake) {
@@ -287,14 +321,19 @@ function checkCollision(snake) {
         for (let j = 0; j < snake.length; j++) {
             for (let k = 1; k < snake[j].body.length; k++) {
                 if (snake[i].head.x == snake[j].body[k].x && snake[i].head.y == snake[j].body[k].y) {
-                    isCollide = true;
+                    if (snake.lifes >= 1){
+                        snake.lifes --;
+                    } else {
+                        isCollide = true;
+                    }
                 }
             }
         }
     }
-    if (isCollide) {
-        snake1 = initSnake("green");
-    }
+    // if (isCollide) {
+    //     snake1 = initSnake();
+    // }
+    
     return isCollide;
 }
 
