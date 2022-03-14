@@ -44,10 +44,19 @@ function initSnake(color) {
         position: initPosition(),
         direction: initDirection(),
         score: 0,
+        heart: 3,
         level: 1,
     }
 }
 
+function heart(snake){
+    let heartCanvas = document.getElementById("lifeBoard");
+    var img = document.getElementById("heart");
+    let heartCtx = heartCanvas.getContext("2d");
+    for(i=0; i<snake.heart; i++){
+            heartCtx.drawImage(img, i*20, 10, CELL_SIZE, CELL_SIZE);
+    }
+}
 let snake1 = initSnake("green");
 
 let apple1 = {
@@ -154,7 +163,6 @@ function draw() {
     setInterval(function() {
         let snakeCanvas = document.getElementById("snakeBoard");
         let ctx = snakeCanvas.getContext("2d");
-
         ctx.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
         
         //snake head 
@@ -168,7 +176,7 @@ function draw() {
         drawImg(ctx, apple1.position.x, apple1.position.y, "asset/apple.png");
         drawImg(ctx, apple2.position.x, apple2.position.y, "asset/apple.png");
         drawScore(snake1);
-
+        heart(snake1)
         drawLevel(snake1);
         if(snake1.level == 2){
             drawWall(ctx, wall1.x, wall1.y, wall1.width, wall1.height, wall1.color);
