@@ -211,7 +211,6 @@ function draw() {
 
         drawSpeed();
         drawLifes();
-        // drawAddLifes();
     }, REDRAW_INTERVAL);
 }
 
@@ -321,22 +320,27 @@ function checkCollision(snake) {
         for (let j = 0; j < snake.length; j++) {
             for (let k = 1; k < snake[j].body.length; k++) {
                 if (snake[i].head.x == snake[j].body[k].x && snake[i].head.y == snake[j].body[k].y) {
-                    if (snake.lifes >= 1){
-                        snake.lifes --;
-                    } else {
-                        isCollide = true;
-                    }
+                    isCollide = true;
+
                 }
             }
         }
     }
-    // if (isCollide) {
-    //     snake1 = initSnake();
-    // }
+    if (isCollide) {
+        alert(snake1.lifes);
+
+        if (snake1.lifes > 1){
+            snake1.lifes -=1;
+            snake1.body.splice(1, snake1.body.length + 1);
+            drawLifes();
+        } else {
+            snake1 = initSnake();
+        }
+    }
     
     return isCollide;
 }
-
+// console.log(snake1.lifes);
 function turn(snake, direction) {
     const oppositeDirections = {
         [DIRECTION.LEFT]: DIRECTION.RIGHT,
