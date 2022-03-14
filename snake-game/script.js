@@ -50,14 +50,7 @@ function initSnake() {
     }
 }
 
-function heart(snake){
-    let heartCanvas = document.getElementById("lifeBoard");
-    var img = document.getElementById("heart");
-    let heartCtx = heartCanvas.getContext("2d");
-    for(i=0; i<snake.heart; i++){
-            heartCtx.drawImage(img, i*20, 10, CELL_SIZE, CELL_SIZE);
-    }
-}
+
 let snake1 = initSnake("green");
 
 let apple1 = {
@@ -200,7 +193,7 @@ function draw() {
         drawImg(ctx, apple1.position.x, apple1.position.y, "asset/apple.png");
         drawImg(ctx, apple2.position.x, apple2.position.y, "asset/apple.png");
         drawScore(snake1);
-        heart(snake1)
+       
         drawLevel(snake1);
 
         if(snake1.level == 2){
