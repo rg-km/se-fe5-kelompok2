@@ -61,24 +61,78 @@ let bonusLifes = {
     position:initPosition(),
 }
 
-function initWall(x, y, width, height, color){
-    return{
-        x: x,
-        y: y,
-        width: width,
-        height: height,
-        color:color,
-    }
-}
-let wall1 = initWall(50, 130, 300, 20, "purple");
-let wall2 = initWall(50, 200, 300, 20, "purple");
-let wall3 = initWall(50, 270, 300, 20, "purple");
-let wall4 = initWall(100, 50, 20, 300, "purple");
-let wall5 = initWall(280, 50, 20, 300, "purple");
+let listArea = [];
 
-function drawWall(ctx, x, y, width, height, color) {
-    ctx.strokeStyle = color;
-    ctx.rect(x, y, width, height);
+function wall1(ctx){
+    let x = 40;
+    let y = 120;
+    let w = 320;
+    let h = CELL_SIZE;
+
+    listArea.push({xStart: x, xEnd: x+w, yStart : y, yEnd : y+h});
+    ctx.rect(x, y, w, h )
+}
+
+function wall2(ctx){
+    let x = 40;
+    let y = 200;
+    let w = 320;
+    let h = CELL_SIZE;
+
+    listArea.push({xStart: x, xEnd: x+w, yStart : y, yEnd : y+h});
+    ctx.rect(x, y, w+10, h+10 )
+}
+function wall3(ctx){
+    let x = 40;
+    let y = 260;
+    let w = 320;
+    let h = CELL_SIZE;
+
+    listArea.push({xStart: x, xEnd: x+w, yStart : y, yEnd : y+h});
+    ctx.rect(x, y, w+10, h+10 )
+}
+function wall4(ctx){
+    let x = 100;
+    let y = 50;
+    let w = CELL_SIZE;
+    let h = 300;
+
+    listArea.push({xStart: x, xEnd: x+w, yStart : y, yEnd : y+h});
+    ctx.rect(x, y, w+10, h+10 )
+}
+function wall5(ctx){
+    let x = 300;
+    let y = 50;
+    let w = CELL_SIZE;
+    let h = 300;
+
+    listArea.push({xStart: x, xEnd: x+w, yStart : y, yEnd : y+h});
+    ctx.rect(x, y, w+10, h+10 )
+}
+
+function drawWall(ctx, level) {
+    ctx.strokeStyle = "purple";
+    ctx.stroke();
+
+    if (level == 2){
+        listArea = [];
+        wall1(ctx);
+
+    } else if (level == 3) {
+        listArea = [];
+        wall1(ctx);
+        wall2(ctx);
+    } else if (level == 4){
+        listArea = [];
+        wall1(ctx);
+        wall2(ctx);
+        wall3(ctx);
+    } else if (level == 5){
+        listArea = [];
+        wall4(ctx);
+        wall5(ctx);
+    }
+
     ctx.stroke();
 }
 
@@ -136,23 +190,26 @@ function drawHead(ctx, x, y){
 }
 
 function drawLifes(){
-    let lifeCanvas = document.getElementById("lifeBoard");
-    let ctxLife = lifeCanvas.getContext("2d");
-    
     let snakeCanvas = document.getElementById("snakeBoard");
-    let ctxBoard = snakeCanvas.getContext("2d");
-
+    let ctx = snakeCanvas.getContext("2d");
     scoreBonus = [1, 3, 5, 7, 11, 13, 17, 19, 23];
     for (let i = 0; i < scoreBonus.length; i++){
         if (snake1.score == scoreBonus[i]){
-            drawImg(ctxBoard, bonusLifes.position.x, bonusLifes.position.y, "asset/heart.png");
+            drawImg(ctx, bonusLifes.position.x, bonusLifes.position.y, "asset/heart.png");
         }
     }
-
+    
+    let lifeCanvas = document.getElementById("lifeBoard");
+    let ctxLife = lifeCanvas.getContext("2d"); 
     for (let i = 0; i < snake1.lifes; i++){
         drawImg(ctxLife, 0 + i*20 / CELL_SIZE, 0 / CELL_SIZE, "asset/heart.png");
     }
+}
 
+//sound
+function sound(src){
+    var myMusic =  new Audio (src);
+    myMusic.play();
 }
 
 //sound
@@ -194,22 +251,8 @@ function draw() {
         drawScore(snake1);
 
         drawLevel(snake1);
-
-        if(snake1.level == 2){
-            drawWall(ctx, wall1.x, wall1.y, wall1.width, wall1.height, wall1.color);
-        }else if(snake1.level == 3){
-            drawWall(ctx, wall1.x, wall1.y, wall1.width, wall1.height, wall1.color);
-            drawWall(ctx, wall2.x, wall2.y, wall2.width, wall2.height, wall2.color);
-        }else if(snake1.level == 4){
-            drawWall(ctx, wall1.x, wall1.y, wall1.width, wall1.height, wall1.color);
-            drawWall(ctx, wall2.x, wall2.y, wall2.width, wall2.height, wall2.color);
-            drawWall(ctx, wall3.x, wall3.y, wall3.width, wall3.height, wall3.color);
-        }else if(snake1.level == 5){
-            drawWall(ctx, wall4.x, wall4.y, wall4.width, wall4.height, wall4.color);
-            drawWall(ctx, wall5.x, wall5.y, wall5.width, wall5.height, wall5.color);
-        }
-
         drawSpeed();
+        drawWall(ctx, snake1.level);
         drawLifes();
     }, REDRAW_INTERVAL);
 }
@@ -242,9 +285,8 @@ function level(snake){
     else if(snake.score == 25 && snake.level == 5){
         sound("asset/levelUp.wav");
         alert("Game Over, Try Again?");
-        snake.level = 1;
-        snake.score = 0;
-        MOVE_INTERVAL = 120;
+        snake1.initSnake();
+        initGame();
     } 
 }
 
@@ -270,7 +312,7 @@ function eat(snake) {
         snake.score++;
         snake.body.push({x: snake.head.x, y: snake.head.y});
     }
-
+  
     if ( snake.head.x == apple2.position.x && snake.head.y == apple2.position.y) {
         apple2.position = initPosition();
         snake.score++;
@@ -321,26 +363,38 @@ function checkCollision(snake) {
             for (let k = 1; k < snake[j].body.length; k++) {
                 if (snake[i].head.x == snake[j].body[k].x && snake[i].head.y == snake[j].body[k].y) {
                     isCollide = true;
-
                 }
             }
         }
     }
-    if (isCollide) {
-        alert(snake1.lifes);
 
+    if (snake1.level >= 2) {
+        var snakeHeadX = snake1.head.x * CELL_SIZE;
+        var snakeHeadY = snake1.head.y * CELL_SIZE;
+
+        for (var i = 0; i < listArea.length; i++){
+            if (snakeHeadX >= listArea[i].xStart && snakeHeadX <= listArea[i].xEnd && snakeHeadY >= listArea[i].yStart && snakeHeadY <= listArea[i].yEnd){
+                isCollide = true;
+            }
+        }
+    }
+
+    if (isCollide) {
         if (snake1.lifes > 1){
-            snake1.lifes -=1;
+            snake1.position = initPosition();
+            snake1.direction = initDirection();
+            snake1.lifes -= 1;
             snake1.body.splice(1, snake1.body.length + 1);
-            drawLifes();
         } else {
+            alert("Game Over! Try Again?");
+            sound("asset/game-over.mp3");
             snake1 = initSnake();
         }
     }
     
     return isCollide;
 }
-// console.log(snake1.lifes);
+
 function turn(snake, direction) {
     const oppositeDirections = {
         [DIRECTION.LEFT]: DIRECTION.RIGHT,
